@@ -1,30 +1,32 @@
-[
-  {
-    "id": "exp_01",
-    "title": "WebGL Shader Test",
-    "description": "Interactive water simulation using custom fragment shaders.",
-    "mediaPath": "",
-    "mediaType": "video"
-  },
-  {
-    "id": "exp_02",
-    "title": "Audio Visualizer",
-    "description": "Real-time audio reactive particle system built with Three.js.",
-    "mediaPath": "",
-    "mediaType": "video"
-  },
-  {
-    "id": "exp_03",
-    "title": "ASCII Art Generator",
-    "description": "Tool that converts uploaded images into ASCII art using canvas pixel data.",
-    "mediaPath": "",
-    "mediaType": "image"
-  },
-  {
-    "id": "exp_04",
-    "title": "CSS Grid Playground",
-    "description": "An interactive tool for visualizing complex CSS grid layouts.",
-    "mediaPath": "",
-    "mediaType": "image"
-  }
-]
+{
+  "items": [
+    {
+      "id": "exp_01",
+      "title": "WebGL Shader Test",
+      "description": "Interactive water simulation using custom fragment shaders.",
+      "mediaPath": "",
+      "mediaType": "video"
+    },
+    {
+      "id": "exp_02",
+      "title": "Audio Visualizer",
+      "description": "Real-time audio reactive particle system built with Three.js.",
+      "mediaPath": "",
+      "mediaType": "video"
+    },
+    {
+      "id": "exp_03",
+      "title": "ASCII Art Generator",
+      "description": "Tool that converts uploaded images into ASCII art using canvas pixel data.",
+      "mediaPath": "",
+      "mediaType": "image"
+    },
+    {
+      "id": "exp_04",
+      "title": "CSS Grid Playground",
+      "description": "An interactive tool for visualizing complex CSS grid layouts.",
+      "mediaPath": "",
+      "mediaType": "image"
+    }
+  ]
+}

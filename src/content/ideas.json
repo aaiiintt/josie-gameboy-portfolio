@@ -1,30 +1,32 @@
-[
-  {
-    "id": "idea_01",
-    "title": "Sustainable Web Design",
-    "description": "Thoughts on minimizing carbon footprint through efficient coding practices and asset optimization.",
-    "mediaPath": "",
-    "mediaType": "image"
-  },
-  {
-    "id": "idea_02",
-    "title": "The Future of Interfaces",
-    "description": "Exploring beyond the screen: Voice, spatial computing, and neuro-interfaces.",
-    "mediaPath": "",
-    "mediaType": "image"
-  },
-  {
-    "id": "idea_03",
-    "title": "Nostalgia in UX",
-    "description": "Why we are drawn to retro aesthetics in modern digital products.",
-    "mediaPath": "",
-    "mediaType": "image"
-  },
-  {
-    "id": "idea_04",
-    "title": "Open Source Collaboration",
-    "description": "A proposal for a new model of funding and maintaining open source projects.",
-    "mediaPath": "",
-    "mediaType": "image"
-  }
-]
+{
+  "items": [
+    {
+      "id": "idea_01",
+      "title": "Sustainable Web Design",
+      "description": "Thoughts on minimizing carbon footprint through efficient coding practices and asset optimization.",
+      "mediaPath": "",
+      "mediaType": "image"
+    },
+    {
+      "id": "idea_02",
+      "title": "The Future of Interfaces",
+      "description": "Exploring beyond the screen: Voice, spatial computing, and neuro-interfaces.",
+      "mediaPath": "",
+      "mediaType": "image"
+    },
+    {
+      "id": "idea_03",
+      "title": "Nostalgia in UX",
+      "description": "Why we are drawn to retro aesthetics in modern digital products.",
+      "mediaPath": "",
+      "mediaType": "image"
+    },
+    {
+      "id": "idea_04",
+      "title": "Open Source Collaboration",
+      "description": "A proposal for a new model of funding and maintaining open source projects.",
+      "mediaPath": "",
+      "mediaType": "image"
+    }
+  ]
+}

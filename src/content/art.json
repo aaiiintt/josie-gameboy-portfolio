@@ -1,30 +1,32 @@
-[
-  {
-    "id": "art_01",
-    "title": "Glitch Portrait 01",
-    "description": "Digital fragmentation study using bayer matrix dithering.",
-    "mediaPath": "",
-    "mediaType": "image"
-  },
-  {
-    "id": "art_02",
-    "title": "Cybernetic Flora",
-    "description": "Generative art piece blending organic shapes with mechanical textures.",
-    "mediaPath": "",
-    "mediaType": "image"
-  },
-  {
-    "id": "art_03",
-    "title": "Retro UI Elements",
-    "description": "A collection of custom UI designs inspired by 90s operating systems.",
-    "mediaPath": "",
-    "mediaType": "image"
-  },
-  {
-    "id": "art_04",
-    "title": "Vaporwave Landscapes",
-    "description": "3D rendered environments with a nostalgic, neon-infused aesthetic.",
-    "mediaPath": "",
-    "mediaType": "image"
-  }
-]
+{
+  "items": [
+    {
+      "id": "art_01",
+      "title": "Glitch Portrait 01",
+      "description": "Digital fragmentation study using bayer matrix dithering.",
+      "mediaPath": "",
+      "mediaType": "image"
+    },
+    {
+      "id": "art_02",
+      "title": "Cybernetic Flora",
+      "description": "Generative art piece blending organic shapes with mechanical textures.",
+      "mediaPath": "",
+      "mediaType": "image"
+    },
+    {
+      "id": "art_03",
+      "title": "Retro UI Elements",
+      "description": "A collection of custom UI designs inspired by 90s operating systems.",
+      "mediaPath": "",
+      "mediaType": "image"
+    },
+    {
+      "id": "art_04",
+      "title": "Vaporwave Landscapes",
+      "description": "3D rendered environments with a nostalgic, neon-infused aesthetic.",
+      "mediaPath": "",
+      "mediaType": "image"
+    }
+  ]
+}

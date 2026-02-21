@@ -1,30 +1,32 @@
-[
-  {
-    "id": "vid_01",
-    "title": "Showreel 2024",
-    "description": "A collection of my recent video work.",
-    "mediaPath": "",
-    "mediaType": "image"
-  },
-  {
-    "id": "vid_02",
-    "title": "Music Video - 'Neon Nights'",
-    "description": "Selected directing and editing for electronic music artist.",
-    "mediaPath": "",
-    "mediaType": "image"
-  },
-  {
-    "id": "vid_03",
-    "title": "Commercial - Sportswear Brand",
-    "description": "High-energy commercial edit with kinetic typography.",
-    "mediaPath": "",
-    "mediaType": "image"
-  },
-  {
-    "id": "vid_04",
-    "title": "Short Film - 'The Signal'",
-    "description": "Sci-fi short film showcasing VFX and color grading skills.",
-    "mediaPath": "",
-    "mediaType": "image"
-  }
-]
+{
+  "items": [
+    {
+      "id": "vid_01",
+      "title": "Showreel 2024",
+      "description": "A collection of my recent video work.",
+      "mediaPath": "",
+      "mediaType": "image"
+    },
+    {
+      "id": "vid_02",
+      "title": "Music Video - 'Neon Nights'",
+      "description": "Selected directing and editing for electronic music artist.",
+      "mediaPath": "",
+      "mediaType": "image"
+    },
+    {
+      "id": "vid_03",
+      "title": "Commercial - Sportswear Brand",
+      "description": "High-energy commercial edit with kinetic typography.",
+      "mediaPath": "",
+      "mediaType": "image"
+    },
+    {
+      "id": "vid_04",
+      "title": "Short Film - 'The Signal'",
+      "description": "Sci-fi short film showcasing VFX and color grading skills.",
+      "mediaPath": "",
+      "mediaType": "image"
+    }
+  ]
+}

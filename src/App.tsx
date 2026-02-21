@@ -126,7 +126,7 @@ function App() {
           </HorizontalScrollSection>
 
           <HorizontalScrollSection title="VIDEOS" description="Selected video work and showreels.">
-            {videosData.map((item, i) => (
+            {videosData.items.map((item, i) => (
               <PortfolioCard
                 key={item.id}
                 id={`V${(i + 1).toString().padStart(2, '0')}`}
@@ -140,7 +140,7 @@ function App() {
           </HorizontalScrollSection>
 
           <HorizontalScrollSection title="ART" description="Digital, generative, and physical art explorations.">
-            {artData.map((item, i) => (
+            {artData.items.map((item, i) => (
               <PortfolioCard
                 key={item.id}
                 id={`A${(i + 1).toString().padStart(2, '0')}`}
@@ -154,7 +154,7 @@ function App() {
           </HorizontalScrollSection>
 
           <HorizontalScrollSection title="EXPERIMENTS" description="Code, shaders, and prototypes.">
-            {experimentsData.map((item, i) => (
+            {experimentsData.items.map((item, i) => (
               <PortfolioCard
                 key={item.id}
                 id={`E${(i + 1).toString().padStart(2, '0')}`}
@@ -168,7 +168,7 @@ function App() {
           </HorizontalScrollSection>
 
           <HorizontalScrollSection title="IDEAS" description="Thoughts, notes, and works in progress.">
-            {ideasData.map((item, i) => (
+            {ideasData.items.map((item, i) => (
               <PortfolioCard
                 key={item.id}
                 id={`I${(i + 1).toString().padStart(2, '0')}`}

@@ -3,7 +3,7 @@ local_backend:
   allowed_hosts: ['localhost', '127.0.0.1']
 backend:
   name: github
-  repo: iaintait/josie-gameboy-portfolio
+  repo: aaiiintt/josie-gameboy-portfolio
   branch: main
 
 media_folder: "public/media" # Media files will be stored in the repo under public/media
