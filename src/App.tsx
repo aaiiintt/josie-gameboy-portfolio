@@ -143,7 +143,6 @@ export default function App() {
               accentColorDeep={activeColorDeep}
             >
               <PortfolioCard
-                id={`card-${section.id}`}
                 title={data.title ?? 'About'}
                 accentColor={activeColor}
                 accentColorDeep={activeColorDeep}

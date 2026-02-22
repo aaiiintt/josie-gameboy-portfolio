@@ -2,7 +2,6 @@ import React from 'react';
 import { getContrastTextColor } from '../utils/colors';
 
 interface PortfolioCardProps {
-  id?: string;
   title: string;
   subtitle?: string;
   mediaPath?: string;
@@ -13,7 +12,6 @@ interface PortfolioCardProps {
 }
 
 export function PortfolioCard({
-  id,
   title,
   mediaPath,
   mediaType = 'image',
