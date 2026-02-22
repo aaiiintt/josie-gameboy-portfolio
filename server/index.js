@@ -32,8 +32,20 @@ const publicDir = join(__dirname, '../public');
 app.use(express.static(publicDir));
 app.use(express.static(distDir));
 
+// ── Health Check ──────────────────────────────────────────────────────────────
+app.get('/health', (_req, res) => res.status(200).send('OK'));
+
 // React SPA fallback
 app.get('*', (_req, res) => res.sendFile(join(distDir, 'index.html')));
 
-// ── Start ─────────────────────────────────────────────────────────────────────
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+// ── Start & Shutdown ──────────────────────────────────────────────────────────
+const server = app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+
+// Graceful shutdown handling for Cloud Run
+process.on('SIGTERM', () => {
+    console.log('SIGTERM received, shutting down gracefully...');
+    server.close(() => {
+        console.log('Express server closed.');
+        process.exit(0);
+    });
+});

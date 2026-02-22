@@ -8,6 +8,7 @@ export interface SectionColorDef {
 }
 
 interface ReceiptHeaderProps {
+  siteName?: string;
   sections?: SectionColorDef[];
 }
 
@@ -19,16 +20,16 @@ const DEFAULT_SECTIONS: SectionColorDef[] = [
   { id: 'ideas', label: 'IDEAS', color: 'var(--mint)', colorDeep: 'var(--mint-deep)' },
 ];
 
-export function ReceiptHeader({ sections = DEFAULT_SECTIONS }: ReceiptHeaderProps) {
+export function ReceiptHeader({ siteName = 'JOSIE TAIT', sections = DEFAULT_SECTIONS }: ReceiptHeaderProps) {
   return (
     <header className="site-header">
       {/* Site name */}
       <a
         href="#"
-        className="font-display text-[0.55rem] tracking-widest whitespace-nowrap"
+        className="font-display text-[0.55rem] tracking-widest whitespace-nowrap uppercase"
         style={{ color: 'var(--dark)', textDecoration: 'none' }}
       >
-        JOSIE TAIT
+        {siteName}
       </a>
 
       {/* Nav links */}
@@ -52,4 +53,3 @@ export function ReceiptHeader({ sections = DEFAULT_SECTIONS }: ReceiptHeaderProp
   );
 }
 
-export default ReceiptHeader;

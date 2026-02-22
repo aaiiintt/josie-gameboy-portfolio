@@ -4,7 +4,7 @@ import { extname, join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import rateLimit from 'express-rate-limit';
 import { loginHandler, requireAuth } from '../middleware/auth.js';
-import { SECTIONS, IS_LOCAL } from '../config.js';
+import { IS_LOCAL } from '../config.js';
 import { readContent, writeContent, upload, uploadToGCS } from '../services/storage.js';
 
 const router = Router();
@@ -33,7 +33,7 @@ router.get('/auth/verify', requireAuth, (req, res) => {
 // ── Content CRUD Endpoints ────────────────────────────────────────────────────
 router.get('/content/:section', async (req, res) => {
     const { section } = req.params;
-    if (!SECTIONS.includes(section)) return res.status(404).json({ error: 'Unknown section' });
+    if (!/^[a-zA-Z0-9_-]+$/.test(section)) return res.status(400).json({ error: 'Invalid section name' });
     try {
         res.json(await readContent(section));
     } catch (err) {
@@ -44,7 +44,7 @@ router.get('/content/:section', async (req, res) => {
 
 router.post('/content/:section', requireAuth, async (req, res) => {
     const { section } = req.params;
-    if (!SECTIONS.includes(section)) return res.status(404).json({ error: 'Unknown section' });
+    if (!/^[a-zA-Z0-9_-]+$/.test(section)) return res.status(400).json({ error: 'Invalid section name' });
     try {
         await writeContent(section, req.body);
         res.json({ ok: true });
@@ -79,7 +79,7 @@ router.post('/upload', requireAuth, uploadLimiter, upload.single('file'), async 
 router.post('/upload/background/:section', requireAuth, uploadLimiter, upload.single('file'), async (req, res) => {
     try {
         const { section } = req.params;
-        if (!SECTIONS.includes(section)) return res.status(404).json({ error: 'Unknown section' });
+        if (!/^[a-zA-Z0-9_-]+$/.test(section)) return res.status(400).json({ error: 'Invalid section name' });
         if (!req.file) return res.status(400).json({ error: 'No file provided' });
 
         if (IS_LOCAL) {

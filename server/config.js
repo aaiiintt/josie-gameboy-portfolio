@@ -1,6 +1,14 @@
-export const SECTIONS = ['about', 'videos', 'art', 'experiments', 'ideas'];
-
 export const DEFAULT_CONTENT = {
+    site_config: {
+        siteName: "Josie's Portfolio",
+        sections: [
+            { id: 'about', displayName: 'About' },
+            { id: 'videos', displayName: 'Videos' },
+            { id: 'art', displayName: 'Art' },
+            { id: 'experiments', displayName: 'Experiments' },
+            { id: 'ideas', displayName: 'Ideas' }
+        ]
+    },
     about: { title: 'About Josie', content: 'Hi, I\'m Josie Tait.\n\nI am a director, editor and creative based in London.\n\nI work across video, art, and experimental digital projects.' },
     videos: { items: [] },
     art: { items: [] },

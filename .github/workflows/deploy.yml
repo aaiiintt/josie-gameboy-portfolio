@@ -48,5 +48,9 @@ jobs:
             --region ${{ env.REGION }} \
             --platform managed \
             --allow-unauthenticated \
+            --cpu-boost \
+            --memory=512Mi \
+            --cpu=1 \
+            --timeout=60s \
             --set-env-vars "GCS_BUCKET=josie-portfolio-content,ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}" \
             --project ${{ env.PROJECT_ID }}

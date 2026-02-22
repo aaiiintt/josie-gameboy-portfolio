@@ -4,6 +4,7 @@ import { resolveMedia } from '../utils/media';
 
 interface SectionConfig {
     id: string;
+    label?: string;
     backgroundSrc: string;
     accentColor: string;
     accentColorDeep: string;

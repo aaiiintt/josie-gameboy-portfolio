@@ -1,0 +1,25 @@
+{
+  "siteName": "Josie Tait",
+  "sections": [
+    {
+      "id": "about",
+      "displayName": "About"
+    },
+    {
+      "id": "videos",
+      "displayName": "Videos"
+    },
+    {
+      "id": "art",
+      "displayName": "Art"
+    },
+    {
+      "id": "experiments",
+      "displayName": "Experiments"
+    },
+    {
+      "id": "ideas",
+      "displayName": "Ideas"
+    }
+  ]
+}

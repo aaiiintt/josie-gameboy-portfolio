@@ -520,14 +520,6 @@
 
   <script>
     // ── Config ──────────────────────────────────────────────────────────────
-    const SECTIONS = [
-      { id: 'about', label: '🌸 About', color: '#f4a7c3' },
-      { id: 'videos', label: '🎬 Videos', color: '#9bc4e8' },
-      { id: 'art', label: '🎨 Art', color: '#f9e4b7' },
-      { id: 'experiments', label: '🔬 Experiments', color: '#c4b5e8' },
-      { id: 'ideas', label: '💡 Ideas', color: '#b5e8c4' },
-    ];
-
     // When accessed via Vite dev server (port 5173), talk to Express directly.
     // In production, everything is on the same server so use relative paths.
     const API = (window.location.hostname === 'localhost' && window.location.port !== '8080')
@@ -535,7 +527,8 @@
       : '';
 
     let token = localStorage.getItem('admin_token') || '';
-    let activeSection = SECTIONS[0].id;
+    let siteConfig = { siteName: "Josie Tait", sections: [] };
+    let activeSection = null;
 
     // ── Auth ─────────────────────────────────────────────────────────────────
     async function doLogin() {
@@ -598,9 +591,11 @@
     // ── Build tabs ───────────────────────────────────────────────────────────
     function buildTabs() {
       const bar = document.getElementById('tab-bar');
-      bar.innerHTML = SECTIONS.map(s =>
-        `<button class="tab-btn${s.id === activeSection ? ' active' : ''}" data-section="${s.id}" onclick="switchTab('${s.id}')">${s.label}</button>`
+      let html = siteConfig.sections.map(s =>
+        `<button class="tab-btn${s.id === activeSection ? ' active' : ''}" data-section="${s.id}" onclick="switchTab('${s.id}')">${esc(s.displayName)}</button>`
       ).join('');
+      html += `<button class="tab-btn${'settings' === activeSection ? ' active' : ''}" data-section="settings" onclick="switchTab('settings')">⚙️ Settings</button>`;
+      bar.innerHTML = html;
     }
 
     function switchTab(id) {
@@ -610,11 +605,18 @@
     }
 
     // ── Render panel ─────────────────────────────────────────────────────────
+    // ── Render panel ─────────────────────────────────────────────────────────
     async function renderPanel(section) {
       const content = document.getElementById('admin-content');
       content.innerHTML = '<p style="padding:20px;opacity:.5">Loading…</p>';
-      const data = await fetch(`${API}/api/content/${section}`).then(r => r.json());
-      const sectionCfg = SECTIONS.find(s => s.id === section);
+
+      if (section === 'settings') {
+        content.innerHTML = renderSettings();
+        return;
+      }
+
+      const data = await fetch(`${API}/api/content/${section}`).then(r => r.ok ? r.json() : {});
+      const sectionCfg = siteConfig.sections.find(s => s.id === section);
 
       if (section === 'about') {
         content.innerHTML = renderAbout(data, sectionCfg);
@@ -724,12 +726,11 @@
     // ── List panels (videos / art / experiments / ideas) ─────────────────────
     function renderList(section, data, cfg) {
       const items = data.items || [];
-      const emoji = cfg.label.split(' ')[0];
-      const label = cfg.label.split(' ').slice(1).join(' ');
-      const color = cfg.color;
+      const label = cfg.displayName;
+      const color = data.accentColor || '#3d3250';
 
       return `
-        <h2 style="font-family:'Nunito',sans-serif;font-size:1.3rem;font-weight:900;margin-bottom:20px">${emoji} ${label} Section</h2>
+        <h2 style="font-family:'Nunito',sans-serif;font-size:1.3rem;font-weight:900;margin-bottom:20px">${esc(label)} Section</h2>
         <p style="font-size:.75rem;color:#888;margin-bottom:16px">Background image for this section:</p>
         ${bgUploaderHtml(section, cfg)}
         <hr class="section-divider">
@@ -754,37 +755,41 @@
       const isVideo = item.mediaType === 'video';
       return `
         <div class="item-card" id="item-${section}-${index}">
-          <div class="item-card-header">
-            <span class="item-number">#${index + 1}</span>
-            <button class="remove-btn" onclick="removeItem('${section}', ${index})">✕ Remove</button>
-          </div>
-          <label class="media-uploader" id="media-uploader-${section}-${index}" title="Click or drag a file here">
-            <input type="file" accept="image/*,video/*"
-                   onchange="handleMediaUpload('${section}', ${index}, this)"
-                   onclick="event.stopPropagation()">
-            ${isVideo
+            <div class="item-card-header">
+              <span class="item-number">#${index + 1}</span>
+              <div style="display:flex; gap:8px;">
+                <button class="remove-btn" onclick="moveItem('${section}', ${index}, -1)" title="Move Up">↑</button>
+                <button class="remove-btn" onclick="moveItem('${section}', ${index}, 1)" title="Move Down">↓</button>
+                <button class="remove-btn" onclick="removeItem('${section}', ${index})">✕ Remove</button>
+              </div>
+            </div>
+            <label class="media-uploader" id="media-uploader-${section}-${index}" title="Click or drag a file here">
+              <input type="file" accept="image/*,video/*"
+                onchange="handleMediaUpload('${section}', ${index}, this)"
+                onclick="event.stopPropagation()">
+                ${isVideo
           ? `<video id="media-preview-${section}-${index}" class="media-thumb" src="${esc(item.mediaPath)}" muted></video>`
           : hasMedia
             ? `<img id="media-preview-${section}-${index}" class="media-thumb" src="${esc(item.mediaPath)}" onerror="this.classList.add('empty');this.removeAttribute('src');this.textContent='🖼️'">`
             : `<div id="media-preview-${section}-${index}" class="media-thumb empty">📁</div>`}
-            <div class="media-info">
-              <div class="media-name" id="media-name-${section}-${index}">${hasMedia ? item.mediaPath.split('/').pop() : 'No file yet — click to upload'}</div>
-              <div class="media-upload-hint">Image or video · up to 100 MB</div>
+                <div class="media-info">
+                  <div class="media-name" id="media-name-${section}-${index}">${hasMedia ? item.mediaPath.split('/').pop() : 'No file yet — click to upload'}</div>
+                  <div class="media-upload-hint">Image or video · up to 100 MB</div>
+                </div>
+                ${isVideo ? '<span class="media-type-badge">VIDEO</span>' : hasMedia ? '<span class="media-type-badge">IMAGE</span>' : ''}
+            </label>
+            <div class="field-group">
+              <label>Title</label>
+              <input type="text" id="title-${section}-${index}" value="${esc(item.title || '')}" />
             </div>
-            ${isVideo ? '<span class="media-type-badge">VIDEO</span>' : hasMedia ? '<span class="media-type-badge">IMAGE</span>' : ''}
-          </label>
-          <div class="field-group">
-            <label>Title</label>
-            <input type="text" id="title-${section}-${index}" value="${esc(item.title || '')}" />
-          </div>
-          <div class="field-group">
-            <label>Description</label>
-            <textarea id="desc-${section}-${index}" rows="3">${esc(item.description || '')}</textarea>
-          </div>
-          <input type="hidden" id="mediaPath-${section}-${index}" value="${esc(item.mediaPath || '')}">
-          <input type="hidden" id="mediaType-${section}-${index}" value="${esc(item.mediaType || 'image')}">
-          <input type="hidden" id="itemId-${section}-${index}" value="${esc(item.id || `${section}_${Date.now()}`)}">
-        </div>`;
+            <div class="field-group">
+              <label>Description</label>
+              <textarea id="desc-${section}-${index}" rows="3">${esc(item.description || '')}</textarea>
+            </div>
+            <input type="hidden" id="mediaPath-${section}-${index}" value="${esc(item.mediaPath || '')}">
+              <input type="hidden" id="mediaType-${section}-${index}" value="${esc(item.mediaType || 'image')}">
+                <input type="hidden" id="itemId-${section}-${index}" value="${esc(item.id || `${section}_${Date.now()}`)}">
+                </div>`;
     }
 
     function wireMediaPickers(section, data) {
@@ -850,11 +855,36 @@
       const el = document.getElementById(`item-${section}-${index}`);
       if (el) el.remove();
       // Re-number remaining cards
+      reindexCards(section);
+    }
+
+    function moveItem(section, index, direction) {
+      const list = document.getElementById(`items-list-${section}`);
+      const cards = list.querySelectorAll('.item-card');
+      if (index + direction < 0 || index + direction >= cards.length) return;
+
+      const current = cards[index];
+      const target = cards[index + direction];
+
+      if (direction < 0) {
+        list.insertBefore(current, target);
+      } else {
+        list.insertBefore(target, current);
+      }
+      reindexCards(section);
+    }
+
+    function reindexCards(section) {
       const list = document.getElementById(`items-list-${section}`);
       list.querySelectorAll('.item-card').forEach((card, i) => {
         const numEl = card.querySelector('.item-number');
         if (numEl) numEl.textContent = `#${i + 1}`;
+        // Update DOM IDs & onclick handlers to reflect new index (this is tricky in raw JS without re-rendering, but let's re-render the list entirely based on collected state)
       });
+      // Better approach for vanilla JS: collect data, swap, re-render
+      const items = collectItems(section);
+      const html = items.map((item, i) => itemCardHtml(section, item, i)).join('');
+      list.innerHTML = html;
     }
 
     function collectItems(section) {
@@ -890,6 +920,111 @@
       }
     }
 
+    // ── Global Settings Panel ────────────────────────────────────────────────
+    function renderSettings() {
+      return `
+                <h2 style="font-family:'Nunito',sans-serif;font-size:1.3rem;font-weight:900;margin-bottom:20px">⚙️ Global Settings</h2>
+
+                <div class="field-group">
+                  <label>Top-Level Site Name</label>
+                  <input type="text" id="settings-sitename" value="${esc(siteConfig.siteName)}" />
+                </div>
+
+                <hr class="section-divider">
+
+                  <h3 style="font-family:'Nunito',sans-serif;font-size:1rem;font-weight:900;margin-bottom:12px">Sections</h3>
+                  <p style="font-size:.75rem;color:#888;margin-bottom:16px">The "about" section ID cannot be deleted or renamed, but its display name can be changed.</p>
+
+                  <div id="settings-sections-list">
+                    ${siteConfig.sections.map((s, i) => sectionCardHtml(s, i)).join('')}
+                  </div>
+
+                  <button class="add-item-btn" onclick="addNewSection()">+ Add New Section</button>
+
+                  <button class="save-btn" style="background:var(--pink)" onclick="saveSettings()">Save Global Settings ✨</button>
+                  <div class="status-msg" id="settings-status"></div>
+                  `;
+    }
+
+    function sectionCardHtml(s, i) {
+      const isAbout = s.id === 'about';
+      return `
+                  <div class="item-card section-row" data-index="${i}" style="display:flex;align-items:center;gap:12px;padding:12px;">
+                    <div style="display:flex;flex-direction:column;gap:4px">
+                      <button class="remove-btn" style="padding:2px 8px" onclick="moveSection(${i}, -1)" ${i === 0 ? 'disabled' : ''}>↑</button>
+                      <button class="remove-btn" style="padding:2px 8px" onclick="moveSection(${i}, 1)" ${i === siteConfig.sections.length - 1 ? 'disabled' : ''}>↓</button>
+                    </div>
+                    <div style="flex:1">
+                      <div style="font-size:.7rem;font-weight:700;color:#888;margin-bottom:4px">DISPLAY NAME</div>
+                      <input type="text" class="section-display-name" value="${esc(s.displayName)}" style="width:100%;padding:6px;font-size:.85rem;" />
+                    </div>
+                    <div style="width:140px">
+                      <div style="font-size:.7rem;font-weight:700;color:#888;margin-bottom:4px">SECTION ID</div>
+                      <input type="text" class="section-id" value="${esc(s.id)}" disabled style="width:100%;padding:6px;font-size:.85rem;background:#eee;color:#888" />
+                    </div>
+                    ${!isAbout ? `<button class="remove-btn" style="margin-top:16px" onclick="removeSection(${i})">✕</button>` : `<div style="width:36px;margin-top:16px"></div>`}
+                  </div>
+                  `;
+    }
+
+    function collectSections() {
+      const list = document.getElementById('settings-sections-list');
+      const rows = list.querySelectorAll('.section-row');
+      return Array.from(rows).map(row => ({
+        id: row.querySelector('.section-id').value,
+        displayName: row.querySelector('.section-display-name').value
+      }));
+    }
+
+    function moveSection(index, dir) {
+      const sections = collectSections();
+      if (index + dir < 0 || index + dir >= sections.length) return;
+      const temp = sections[index];
+      sections[index] = sections[index + dir];
+      sections[index + dir] = temp;
+      document.getElementById('settings-sections-list').innerHTML = sections.map((s, i) => sectionCardHtml(s, i)).join('');
+    }
+
+    function removeSection(index) {
+      if (!confirm("Are you sure you want to remove this section? Content will not be deleted but it will be hidden from the portfolio.")) return;
+      const sections = collectSections();
+      sections.splice(index, 1);
+      document.getElementById('settings-sections-list').innerHTML = sections.map((s, i) => sectionCardHtml(s, i)).join('');
+    }
+
+    function addNewSection() {
+      const sections = collectSections();
+      const newId = 'section_' + Date.now().toString().slice(-6);
+      sections.push({ id: newId, displayName: 'New Section' });
+      document.getElementById('settings-sections-list').innerHTML = sections.map((s, i) => sectionCardHtml(s, i)).join('');
+    }
+
+    async function saveSettings() {
+      setStatus('settings-status', 'loading');
+      try {
+        const siteName = document.getElementById('settings-sitename').value;
+        const sections = collectSections();
+        const payload = { siteName, sections };
+        const res = await fetch(`${API}/api/content/site_config`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          body: JSON.stringify(payload)
+        });
+        if (res.status === 401) {
+          doLogout();
+          alert("Session expired. Please log in again.");
+          return;
+        }
+        if (!res.ok) throw new Error('Save failed');
+        // Update local memory and rebuild tabs
+        siteConfig = payload;
+        buildTabs();
+        setStatus('settings-status', 'ok', 'Settings saved! ✨');
+      } catch (err) {
+        setStatus('settings-status', 'err', 'Failed to save settings');
+      }
+    }
+
     // ── Helpers ──────────────────────────────────────────────────────────────
     function esc(str) {
       return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -906,9 +1041,18 @@
     }
 
     // ── Init ─────────────────────────────────────────────────────────────────
-    function showAdmin() {
+    async function showAdmin() {
       document.getElementById('login-screen').style.display = 'none';
       document.getElementById('admin-shell').style.display = 'flex';
+
+      try {
+        const cfg = await fetch(`${API}/api/content/site_config`).then(r => r.json());
+        siteConfig = cfg;
+        activeSection = activeSection || (siteConfig.sections[0] ? siteConfig.sections[0].id : 'settings');
+      } catch (e) {
+        console.error("Failed to load global config:", e);
+      }
+
       buildTabs();
       renderPanel(activeSection);
     }
